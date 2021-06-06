@@ -81,16 +81,7 @@ class Application(tk.Frame):
         if not any([islower, isupper, issymbols, isdigits]):
             messagebox.showerror(title="Error", message=self._ERROR_MESSAGE)
         else:
-            base = ""
-            if self.lower_value.get():
-                base += string.ascii_lowercase
-            if self.upper_value.get():
-                base += string.ascii_uppercase
-            if self.symbols_value.get():
-                base += string.punctuation
-            if self.digits_value.get():
-                base += string.digits
-
+            base = self.generate_base()
             pass_length = self.password_length_scale.get()
             password = "".join(secrets.choice(base) for i in range(pass_length))
             self.label_value.set(password)
@@ -99,6 +90,18 @@ class Application(tk.Frame):
         self.master.clipboard_clear()
         self.master.clipboard_append(self.label_value.get())
         self.master.update()
+
+    def generate_base(self):
+        base = ""
+        if self.lower_value.get():
+            base += string.ascii_lowercase
+        if self.upper_value.get():
+            base += string.ascii_uppercase
+        if self.symbols_value.get():
+            base += string.punctuation
+        if self.digits_value.get():
+            base += string.digits
+        return base
 
 
 if __name__ == "__main__":
