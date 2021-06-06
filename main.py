@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox, LEFT, RIGHT
 import secrets
 import string
+import random
 
 
 class Application(tk.Frame):
@@ -81,9 +82,18 @@ class Application(tk.Frame):
         if not any([islower, isupper, issymbols, isdigits]):
             messagebox.showerror(title="Error", message=self._ERROR_MESSAGE)
         else:
-            base = self.generate_base()
             pass_length = self.password_length_scale.get()
-            password = "".join(secrets.choice(base) for i in range(pass_length))
+            base = self.generate_base()
+            password = []
+
+            while len(password) < pass_length:
+                for group in base:
+                    password.append(secrets.choice(group))
+                    if len(password) > pass_length:
+                        break
+
+            random.shuffle(password)
+            password = "".join(password)
             self.label_value.set(password)
 
     def copy_clipboard(self):
@@ -92,15 +102,15 @@ class Application(tk.Frame):
         self.master.update()
 
     def generate_base(self):
-        base = ""
+        base = []
         if self.lower_value.get():
-            base += string.ascii_lowercase
+            base.append(string.ascii_lowercase)
         if self.upper_value.get():
-            base += string.ascii_uppercase
+            base.append(string.ascii_uppercase)
         if self.symbols_value.get():
-            base += string.punctuation
+            base.append(string.punctuation)
         if self.digits_value.get():
-            base += string.digits
+            base.append(string.digits)
         return base
 
 
